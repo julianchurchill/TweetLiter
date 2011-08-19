@@ -1,6 +1,6 @@
-package com.example.tweetist;
+package com.example.tweetliter;
 
-import com.example.tweetist.R;
+import com.example.tweetliter.R;
 
 import winterwell.jtwitter.Twitter;
 import android.app.Activity;

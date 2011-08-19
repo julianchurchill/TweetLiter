@@ -1,4 +1,4 @@
-package com.example.tweetist;
+package com.example.tweetliter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,7 +9,7 @@ import java.util.Map;
 import org.joda.time.Instant;
 import org.joda.time.Period;
 
-import com.example.tweetist.R;
+import com.example.tweetliter.R;
 
 import winterwell.jtwitter.Twitter;
 import android.app.ListActivity;

@@ -1,4 +1,4 @@
-package com.example.tweetist;
+package com.example.tweetliter;
 
 import java.util.List;
 
