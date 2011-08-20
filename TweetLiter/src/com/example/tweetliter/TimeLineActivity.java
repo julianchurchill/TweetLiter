@@ -9,14 +9,11 @@ import java.util.Map;
 import org.joda.time.Instant;
 import org.joda.time.Period;
 
-import com.example.tweetliter.R;
-
 import winterwell.jtwitter.Twitter;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,21 +22,15 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-public abstract class TimeLineActivity extends ListActivity {
-
-	private static final String retweetEndTag = ": ";
-	private static final String tweetTitleKey = "tweetTitle";
+public abstract class TimeLineActivity extends ListActivity
+{
+	public static final String tweetTitleKey = "tweetTitle";
 	private static final String tweetTextKey = "text";
-	private static final int retweetContextMenuID = 0;
-	private static final int favouriteContextMenuID = 1;
-	private static final int profileContextMenuID = 1000;
-	private static final int profileContextMenuOrder = 1000;
-	private static final int characterNotFound = -1;
-	private static final String alphaNumericSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	private static final String retweetEndTag = ": ";
 
 	private List< Map<String, String> > listRows = null;
 	private List<Twitter.Status> statusList = null;
-	Map<Integer, String> profileContextMenuItems = new HashMap<Integer, String>();
+	TimeLineContextMenu timeLineContextMenu = new TimeLineContextMenu( getApplicationContext() );
 
 	protected abstract List<Twitter.Status> getTimeLine();
 
@@ -57,75 +48,15 @@ public abstract class TimeLineActivity extends ListActivity {
 	public void onCreateContextMenu( ContextMenu menu, View v, ContextMenuInfo menuInfo )
 	{
 	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-	    Map<String, String> row = listRows.get( info.position );
-	    menu.setHeaderTitle( row.get( tweetTitleKey ) );
-	    menu.add( Menu.NONE, retweetContextMenuID, 0, "Retweet" );
-	    menu.add( Menu.NONE, favouriteContextMenuID, 1, "Favourite" );
-	    addTweetMentions( menu, statusList.get( info.position ).text );
+		timeLineContextMenu.onCreateContextMenu( menu, v,
+				listRows.get( info.position ), statusList.get( info.position ) );
 	}
 
 	@Override
 	public boolean onContextItemSelected( MenuItem item )
 	{
 	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-	    if( item.getItemId() == retweetContextMenuID )
-	    {
-			Toast.makeText( getApplicationContext(), "Retweeting...", Toast.LENGTH_SHORT ).show();
-			MainActivity.myTwitter.retweet( statusList.get( info.position ) );
-	    }
-	    else if( item.getItemId() == favouriteContextMenuID )
-	    {
-			Toast.makeText( getApplicationContext(), "Favouriting...", Toast.LENGTH_SHORT ).show();
-			MainActivity.myTwitter.setFavorite( statusList.get( info.position ), true );
-	    }
-	    else if( item.getItemId() >= profileContextMenuID )
-	    {
-			Toast.makeText( getApplicationContext(), "Profile...", Toast.LENGTH_SHORT ).show();
-	    }
-	    return true;
-	}
-
-	private void addTweetMentions( ContextMenu menu, String tweet )
-	{
-		int id = profileContextMenuID;
-		for( String user : extractUsers( tweet ) )
-		{
-			profileContextMenuItems.put( id, user );
-			menu.add( Menu.NONE, id, profileContextMenuOrder, "Profile " + user );
-			id++;
-		}
-	}
-	
-	private List<String> extractUsers( String tweet )
-	{
-		List<String> users = new ArrayList<String>();
-		int startIndex = tweet.indexOf( '@' );
-		while( startIndex != characterNotFound )
-		{
-			int endIndex = findOnePastEndOfUser( tweet, startIndex );
-			if( endIndex == characterNotFound )
-			{
-				endIndex = tweet.length();
-			}
-			users.add( tweet.substring( startIndex, endIndex ) );
-			startIndex = tweet.indexOf( '@', endIndex );
-		}
-		return users;
-	}
-	
-	private int findOnePastEndOfUser( String tweet, int userAtSymbolIndex )
-	{
-		int index = -1;
-		int userNameStartIndex = userAtSymbolIndex + 1;
-		for( int i = userNameStartIndex; i < tweet.length(); i++ )
-		{
-			if( alphaNumericSet.indexOf( tweet.charAt( i ) ) == characterNotFound )
-			{
-				index = i;
-				break;
-			}
-		}
-		return index;
+		return timeLineContextMenu.onContextItemSelected( item, statusList.get( info.position ) );
 	}
 
 	private void addItemClickNotifier()
