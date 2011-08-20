@@ -26,17 +26,18 @@
         <activity android:name=".MainTabs"
                   android:label="@string/app_name"
                   android:launchMode="singleInstance"
-                  android:theme="@android:style/Theme.NoTitleBar">
-        </activity>
+                  android:theme="@android:style/Theme.NoTitleBar" />
 
 		<activity android:name=".HomeTimeLineActivity"
 				  android:label="@string/app_name"
-                  android:launchMode="singleInstance">
-        </activity>
+                  android:launchMode="singleInstance" />
 
-		<activity android:name="com.example.tweetliter.UserTimeLineActivity"
+		<activity android:name=".UserTimeLineActivity"
 				  android:label="@string/app_name"
                   android:launchMode="singleInstance" />
 
+		<activity android:name=".ViewProfileActivity"
+				  android:label="@string/app_name"
+                  android:launchMode="singleInstance" />
     </application>
 </manifest>

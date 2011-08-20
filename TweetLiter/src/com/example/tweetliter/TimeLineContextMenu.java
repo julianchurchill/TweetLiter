@@ -7,6 +7,7 @@ import java.util.Map;
 
 import winterwell.jtwitter.Twitter;
 import android.content.Context;
+import android.content.Intent;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,15 +22,15 @@ public class TimeLineContextMenu
 	private static final int profileContextMenuOrder = 1000;
 
 	public Map<Integer, String> profileContextMenuItems = new HashMap<Integer, String>();
-	private Context applicationContext = null;
+	private Context context = null;
 
 	public TimeLineContextMenu()
 	{
 	}
 	
-	public void setContext( Context applicationContext )
+	public void setContext( Context context )
 	{
-		this.applicationContext = applicationContext;
+		this.context = context;
 	}
 	
 	public void onCreateContextMenu( ContextMenu menu, View v, Map<String, String> row, Twitter.Status tweet )
@@ -40,23 +41,26 @@ public class TimeLineContextMenu
 	    addTweetMentions( menu, tweet.text );
 	}
 
-	public boolean onContextItemSelected( MenuItem item, Twitter.Status tweet )
+	public Intent onContextItemSelected( MenuItem item, Twitter.Status tweet )
 	{
+		Intent intent = null;
 	    if( item.getItemId() == retweetContextMenuID )
 	    {
-			Toast.makeText( applicationContext, "Retweeting...", Toast.LENGTH_SHORT ).show();
+			Toast.makeText( context, "Retweeting...", Toast.LENGTH_SHORT ).show();
 			MainActivity.myTwitter.retweet( tweet );
 	    }
 	    else if( item.getItemId() == favouriteContextMenuID )
 	    {
-			Toast.makeText( applicationContext, "Favouriting...", Toast.LENGTH_SHORT ).show();
+			Toast.makeText( context, "Favouriting...", Toast.LENGTH_SHORT ).show();
 			MainActivity.myTwitter.setFavorite( tweet, true );
 	    }
 	    else if( item.getItemId() >= profileContextMenuID )
 	    {
-			Toast.makeText( applicationContext, "Profile...", Toast.LENGTH_SHORT ).show();
+			Toast.makeText( context, "Viewing profile...", Toast.LENGTH_SHORT ).show();
+	        intent = new Intent().setClass( context, ViewProfileActivity.class );
+			intent.putExtra( TweetLiterConstants.IntentExtraKey_UserName, profileContextMenuItems.get( item.getItemId() ) );
 	    }
-	    return true;
+	    return intent;
 	}
 
 	private void addTweetMentions( ContextMenu menu, String tweet )

@@ -11,6 +11,7 @@ import org.joda.time.Period;
 
 import winterwell.jtwitter.Twitter;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -56,7 +57,12 @@ public abstract class TimeLineActivity extends ListActivity
 	public boolean onContextItemSelected( MenuItem item )
 	{
 	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-		return timeLineContextMenu.onContextItemSelected( item, statusList.get( info.position ) );
+		Intent intent = timeLineContextMenu.onContextItemSelected( item, statusList.get( info.position ) );
+		if( intent != null )
+		{
+			startActivity( intent );
+		}
+		return true;
 	}
 
 	private void addItemClickNotifier()
