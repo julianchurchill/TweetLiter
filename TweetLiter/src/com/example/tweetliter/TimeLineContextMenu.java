@@ -19,13 +19,15 @@ public class TimeLineContextMenu
 	private static final int favouriteContextMenuID = 1;
 	private static final int profileContextMenuID = 1000;
 	private static final int profileContextMenuOrder = 1000;
-	private static final int characterNotFound = -1;
-	private static final String alphaNumericSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	public Map<Integer, String> profileContextMenuItems = new HashMap<Integer, String>();
 	private Context applicationContext = null;
 
-	public TimeLineContextMenu( Context applicationContext )
+	public TimeLineContextMenu()
+	{
+	}
+	
+	public void setContext( Context applicationContext )
 	{
 		this.applicationContext = applicationContext;
 	}
@@ -63,7 +65,7 @@ public class TimeLineContextMenu
 		for( String user : extractUsers( tweet ) )
 		{
 			profileContextMenuItems.put( id, user );
-			menu.add( Menu.NONE, id, profileContextMenuOrder, "Profile " + user );
+			menu.add( Menu.NONE, id, profileContextMenuOrder, "Profile @" + user );
 			id++;
 		}
 	}
@@ -71,32 +73,18 @@ public class TimeLineContextMenu
 	private List<String> extractUsers( String tweet )
 	{
 		List<String> users = new ArrayList<String>();
-		int startIndex = tweet.indexOf( '@' );
-		while( startIndex != characterNotFound )
+		int atSymbolIndex = tweet.indexOf( '@' );
+		while( atSymbolIndex != StringUtils.characterNotFound )
 		{
-			int endIndex = findOnePastEndOfUser( tweet, startIndex );
-			if( endIndex == characterNotFound )
+			int userStartIndex = atSymbolIndex + 1;
+			int endIndex = StringUtils.findFirstCharacterNotIn( StringUtils.alphaNumericChars, tweet, userStartIndex );
+			if( endIndex == StringUtils.characterNotFound )
 			{
 				endIndex = tweet.length();
 			}
-			users.add( tweet.substring( startIndex, endIndex ) );
-			startIndex = tweet.indexOf( '@', endIndex );
+			users.add( tweet.substring( userStartIndex, endIndex ) );
+			atSymbolIndex = tweet.indexOf( '@', endIndex );
 		}
 		return users;
-	}
-
-	private int findOnePastEndOfUser( String tweet, int userAtSymbolIndex )
-	{
-		int index = -1;
-		int userNameStartIndex = userAtSymbolIndex + 1;
-		for( int i = userNameStartIndex; i < tweet.length(); i++ )
-		{
-			if( alphaNumericSet.indexOf( tweet.charAt( i ) ) == characterNotFound )
-			{
-				index = i;
-				break;
-			}
-		}
-		return index;
 	}
 }

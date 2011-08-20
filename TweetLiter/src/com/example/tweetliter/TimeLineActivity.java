@@ -26,11 +26,10 @@ public abstract class TimeLineActivity extends ListActivity
 {
 	public static final String tweetTitleKey = "tweetTitle";
 	private static final String tweetTextKey = "text";
-	private static final String retweetEndTag = ": ";
 
 	private List< Map<String, String> > listRows = null;
 	private List<Twitter.Status> statusList = null;
-	TimeLineContextMenu timeLineContextMenu = new TimeLineContextMenu( getApplicationContext() );
+	TimeLineContextMenu timeLineContextMenu = new TimeLineContextMenu();
 
 	protected abstract List<Twitter.Status> getTimeLine();
 
@@ -39,6 +38,7 @@ public abstract class TimeLineActivity extends ListActivity
 	public void onCreate(Bundle savedInstanceState)
 	{
 	    super.onCreate( savedInstanceState );
+	    timeLineContextMenu.setContext( getApplicationContext() );
 	    registerForContextMenu( getListView() );
 	    addItemClickNotifier();
 	    updateTimeLine();
@@ -102,22 +102,44 @@ public abstract class TimeLineActivity extends ListActivity
 	private String createRetweetUserCredit(String tweetText)
 	{
 		String retweetCredit = "";
-		if( isRetweet( tweetText ) )
+		int endIndex = findIndexAfterRetweetUsername( tweetText );
+		if( endIndex != StringUtils.characterNotFound )
 		{
-			String user = tweetText.substring( tweetText.indexOf( '@' ), tweetText.indexOf( retweetEndTag ) );
-			retweetCredit = " (rt " + user + ")";
+			int userStartIndex = tweetText.indexOf( '@' ) + 1;
+			String user = tweetText.substring( userStartIndex, endIndex );
+			retweetCredit = " (rt @" + user + ")";
 		}
 		return retweetCredit;
 	}
 
 	private String removeRetweetCredit(String tweetText)
 	{
-		String editedTweetText = tweetText;
+		String originalTweetText = tweetText;
+		int endIndex = findIndexAfterRetweetUsername( tweetText );
+		if( endIndex != StringUtils.characterNotFound )
+		{
+			int startOfOriginalTweet = endIndex + 1;
+			int nextNonWhiteSpace = StringUtils.findFirstCharacterNotIn( 
+					StringUtils.whiteSpaceChars, tweetText, startOfOriginalTweet );
+			originalTweetText = tweetText.substring( nextNonWhiteSpace );
+		}
+		return originalTweetText;
+	}
+	
+	private int findIndexAfterRetweetUsername( String tweetText )
+	{
+		int endIndex = StringUtils.characterNotFound;
 		if( isRetweet( tweetText ) )
 		{
-			editedTweetText = tweetText.substring( tweetText.indexOf( retweetEndTag ) + retweetEndTag.length() );
+			int atSymbolIndex = tweetText.indexOf( '@' );
+			if( atSymbolIndex != StringUtils.characterNotFound )
+			{
+				int userStartIndex = atSymbolIndex + 1;
+				endIndex = StringUtils.findFirstCharacterNotIn( 
+						StringUtils.alphaNumericChars, tweetText, userStartIndex );
+			}
 		}
-		return editedTweetText;
+		return endIndex;
 	}
 
 	private Boolean isRetweet(String tweetText)
