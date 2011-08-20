@@ -14,14 +14,12 @@ public class ViewProfileActivity extends Activity
         super.onCreate( savedInstanceState );
         setContentView( R.layout.viewprofile );
 
-//		Twitter.User user = MainActivity.myTwitter.getUser( 
-//				savedInstanceState.getString( TweetLiterConstants.IntentExtraKey_UserName ) );
-//		setUserName( user.screenName );
-//		setDescription( user.description );
-		setUserName( "dave" );
-		setDescription( "some random rambling description" );
+		Twitter.User user = MainActivity.myTwitter.getUser( 
+				getIntent().getStringExtra( TweetLiterConstants.IntentExtraKey_UserName ) );
+		setUserName( user.screenName );
+		setDescription( user.description );
     }
-    
+
     private void setUserName( String user )
     {
         TextView tv = (TextView)findViewById( R.id.viewProfileTextTitle );

@@ -1,7 +1,5 @@
 package com.example.tweetliter;
 
-import com.example.tweetliter.R;
-
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;

@@ -1,7 +1,5 @@
 package com.example.tweetliter;
 
-import com.example.tweetliter.R;
-
 import winterwell.jtwitter.Twitter;
 import android.app.Activity;
 import android.app.Dialog;
@@ -49,7 +47,7 @@ public class MainActivity extends Activity implements TwitterAuthorizationListen
     public void onNewIntent( Intent intent )
     {
     	super.onNewIntent( intent );
-    	
+
     	Uri uri = intent.getData();
     	if( twitterAuthorizer.extractAccessToken( uri ) )
     	{
