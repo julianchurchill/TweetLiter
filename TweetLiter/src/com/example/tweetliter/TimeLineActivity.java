@@ -10,11 +10,15 @@ import org.joda.time.Instant;
 import org.joda.time.Period;
 
 import winterwell.jtwitter.Twitter;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +31,7 @@ public abstract class TimeLineActivity extends ListActivity
 {
 	public static final String tweetTitleKey = "tweetTitle";
 	private static final String tweetTextKey = "text";
+	private static final int ABOUT_DIALOG_ID = 1;
 
 	private List< Map<String, String> > listRows = null;
 	private List<Twitter.Status> statusList = null;
@@ -44,6 +49,62 @@ public abstract class TimeLineActivity extends ListActivity
 	    addItemClickNotifier();
 	    updateTimeLine();
 	}
+
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu )
+    {
+        getMenuInflater().inflate( R.menu.main_menu, menu );
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected( MenuItem item )
+    {
+    	boolean retVal = true;
+        switch( item.getItemId() )
+        {
+        	case R.id.new_tweet:
+        		startNewTweetActivity();
+	        case R.id.about:
+	            showAbout();
+	        default:
+	            retVal = super.onOptionsItemSelected( item );
+        }
+        return retVal;
+    }
+    
+    private void startNewTweetActivity()
+    {
+    	Intent intent = new Intent().setClass( getApplicationContext(), TweetActivity.class );
+    	startActivity( intent );
+    }
+    
+    private void showAbout()
+    {
+    	showDialog( ABOUT_DIALOG_ID );
+    }
+
+    protected Dialog onCreateDialog( int id )
+    {
+        Dialog dialog;
+        switch(id)
+        {
+	        case ABOUT_DIALOG_ID:
+	            dialog = createAboutDialog();
+	            break;
+	        default:
+	            dialog = null;
+        }
+        return dialog;
+    }
+    
+    private Dialog createAboutDialog()
+    {
+    	AlertDialog.Builder builder = new AlertDialog.Builder( this );
+    	builder.setMessage( "TweetLiter by Julian Churchill" );
+    	builder.setPositiveButton( "OK", null );
+    	return builder.create();
+    }
 
 	@Override
 	public void onCreateContextMenu( ContextMenu menu, View v, ContextMenuInfo menuInfo )
