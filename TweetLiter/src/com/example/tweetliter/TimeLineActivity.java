@@ -13,7 +13,6 @@ import winterwell.jtwitter.Twitter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -65,10 +64,13 @@ public abstract class TimeLineActivity extends ListActivity
         {
         	case R.id.new_tweet:
         		startNewTweetActivity();
+        		break;
 	        case R.id.about:
 	            showAbout();
+	            break;
 	        default:
 	            retVal = super.onOptionsItemSelected( item );
+	            break;
         }
         return retVal;
     }
