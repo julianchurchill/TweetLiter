@@ -23,6 +23,7 @@ public class TimeLineContextMenu
 
 	public Map<Integer, String> profileContextMenuItems = new HashMap<Integer, String>();
 	private Context context = null;
+	private int currentProfileID = profileContextMenuID;
 
 	public TimeLineContextMenu()
 	{
@@ -38,6 +39,7 @@ public class TimeLineContextMenu
 	    menu.setHeaderTitle( row.get( TimeLineActivity.tweetTitleKey ) );
 	    menu.add( Menu.NONE, retweetContextMenuID, 0, "Retweet" );
 	    menu.add( Menu.NONE, favouriteContextMenuID, 1, "Favourite" );
+	    addUserProfile( menu, tweet.user.screenName );
 	    addTweetMentions( menu, tweet.text );
 	}
 
@@ -63,14 +65,18 @@ public class TimeLineContextMenu
 	    return intent;
 	}
 
+	private void addUserProfile( ContextMenu menu, String user )
+	{
+		profileContextMenuItems.put( currentProfileID, user );
+		menu.add( Menu.NONE, currentProfileID, profileContextMenuOrder, "Profile @" + user );
+		currentProfileID++;
+	}
+
 	private void addTweetMentions( ContextMenu menu, String tweet )
 	{
-		int id = profileContextMenuID;
 		for( String user : extractUsers( tweet ) )
 		{
-			profileContextMenuItems.put( id, user );
-			menu.add( Menu.NONE, id, profileContextMenuOrder, "Profile @" + user );
-			id++;
+			addUserProfile( menu, user );
 		}
 	}
 
