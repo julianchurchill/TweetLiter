@@ -20,6 +20,7 @@ public class TimeLineContextMenu
 	private static final int favouriteContextMenuID = 1;
 	private static final int profileContextMenuID = 1000;
 	private static final int profileContextMenuOrder = 1000;
+	private static final String validUsernameCharacters = StringUtils.alphaNumericChars + "_";
 
 	public Map<Integer, String> profileContextMenuItems = new HashMap<Integer, String>();
 	private Context context = null;
@@ -87,7 +88,7 @@ public class TimeLineContextMenu
 		while( atSymbolIndex != StringUtils.characterNotFound )
 		{
 			int userStartIndex = atSymbolIndex + 1;
-			int endIndex = StringUtils.findFirstCharacterNotIn( StringUtils.alphaNumericChars, tweet, userStartIndex );
+			int endIndex = StringUtils.findFirstCharacterNotIn( validUsernameCharacters, tweet, userStartIndex );
 			if( endIndex == StringUtils.characterNotFound )
 			{
 				endIndex = tweet.length();
