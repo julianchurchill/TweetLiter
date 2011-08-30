@@ -4,4 +4,7 @@
     <string name="app_name">TweetLiter</string>
     <string name="new_tweet">New Tweet</string>
     <string name="about">About</string>
+    <string name="Follow">Follow</string>
+    <string name="Unfollow">Unfollow</string>
+    <string name="Updating">Updating...</string>
 </resources>
