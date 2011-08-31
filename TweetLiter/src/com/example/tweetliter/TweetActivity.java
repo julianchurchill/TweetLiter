@@ -13,7 +13,7 @@ public class TweetActivity extends Activity
         super.onCreate( savedInstanceState );
         setContentView( R.layout.tweet );
 
-        String initialText = getIntent().getStringExtra( TweetLiterConstants.IntentExtraKey_RetweetText );
+        String initialText = getIntent().getStringExtra( TweetLiterConstants.IntentExtraKey_InitialTweetText );
     	getEditText().setText( initialText );
     }
 

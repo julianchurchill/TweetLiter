@@ -20,7 +20,8 @@ public class TimeLineContextMenu
 {
 	private static final int retweetContextMenuID = 0;
 	private static final int retweetWithCommentContextMenuID = 1;
-	private static final int favouriteContextMenuID = 2;
+	private static final int replyContextMenuID = 2;
+	private static final int favouriteContextMenuID = 3;
 	private static final int profileContextMenuID = 1000;
 	private static final int profileContextMenuOrder = 1000;
 	private static final String validUsernameCharacters = StringUtils.alphaNumericChars + "_";
@@ -46,7 +47,8 @@ public class TimeLineContextMenu
 	    menu.setHeaderTitle( row.get( TimeLineActivity.tweetTitleKey ) );
 	    menu.add( Menu.NONE, retweetContextMenuID, 0, "Retweet" );
 	    menu.add( Menu.NONE, retweetWithCommentContextMenuID, 1, "Retweet with comment" );
-	    menu.add( Menu.NONE, favouriteContextMenuID, 2, "Favourite" );
+	    menu.add( Menu.NONE, replyContextMenuID, 2, "Reply" );
+	    menu.add( Menu.NONE, favouriteContextMenuID, 3, "Favourite" );
 	    uniqueUserProfiles.clear();
 	    addUserProfile( menu, tweet.user.screenName );
 	    addTweetMentions( menu, tweet.text );
@@ -65,7 +67,12 @@ public class TimeLineContextMenu
 	    else if( item.getItemId() == retweetWithCommentContextMenuID )
 	    {
 	    	intent = new Intent().setClass( context, TweetActivity.class );
-			intent.putExtra( TweetLiterConstants.IntentExtraKey_RetweetText, "RT @" + userName + ": " + tweetText );
+			intent.putExtra( TweetLiterConstants.IntentExtraKey_InitialTweetText, "RT @" + userName + ": " + tweetText );
+	    }
+	    else if( item.getItemId() == replyContextMenuID )
+	    {
+	    	intent = new Intent().setClass( context, TweetActivity.class );
+			intent.putExtra( TweetLiterConstants.IntentExtraKey_InitialTweetText, "@" + userName + " " );
 	    }
 	    else if( item.getItemId() == favouriteContextMenuID )
 	    {
