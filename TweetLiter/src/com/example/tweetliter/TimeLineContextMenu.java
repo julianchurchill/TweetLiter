@@ -19,7 +19,8 @@ import android.widget.Toast;
 public class TimeLineContextMenu
 {
 	private static final int retweetContextMenuID = 0;
-	private static final int favouriteContextMenuID = 1;
+	private static final int retweetWithCommentContextMenuID = 1;
+	private static final int favouriteContextMenuID = 2;
 	private static final int profileContextMenuID = 1000;
 	private static final int profileContextMenuOrder = 1000;
 	private static final String validUsernameCharacters = StringUtils.alphaNumericChars + "_";
@@ -28,6 +29,8 @@ public class TimeLineContextMenu
 	private Context context = null;
 	private int currentProfileID = profileContextMenuID;
 	private Set<String> uniqueUserProfiles = new HashSet<String>();
+	private String userName = "";
+	private String tweetText = "";
 
 	public TimeLineContextMenu()
 	{
@@ -42,10 +45,13 @@ public class TimeLineContextMenu
 	{
 	    menu.setHeaderTitle( row.get( TimeLineActivity.tweetTitleKey ) );
 	    menu.add( Menu.NONE, retweetContextMenuID, 0, "Retweet" );
-	    menu.add( Menu.NONE, favouriteContextMenuID, 1, "Favourite" );
+	    menu.add( Menu.NONE, retweetWithCommentContextMenuID, 1, "Retweet with comment" );
+	    menu.add( Menu.NONE, favouriteContextMenuID, 2, "Favourite" );
 	    uniqueUserProfiles.clear();
 	    addUserProfile( menu, tweet.user.screenName );
 	    addTweetMentions( menu, tweet.text );
+	    userName = tweet.user.screenName;
+	    tweetText = tweet.text;
 	}
 
 	public Intent onContextItemSelected( MenuItem item, Twitter.Status tweet )
@@ -55,6 +61,11 @@ public class TimeLineContextMenu
 	    {
 			Toast.makeText( context, "Retweeting...", Toast.LENGTH_SHORT ).show();
 			MainActivity.myTwitter.retweet( tweet );
+	    }
+	    else if( item.getItemId() == retweetWithCommentContextMenuID )
+	    {
+	    	intent = new Intent().setClass( context, TweetActivity.class );
+			intent.putExtra( TweetLiterConstants.IntentExtraKey_RetweetText, "RT @" + userName + ": " + tweetText );
 	    }
 	    else if( item.getItemId() == favouriteContextMenuID )
 	    {

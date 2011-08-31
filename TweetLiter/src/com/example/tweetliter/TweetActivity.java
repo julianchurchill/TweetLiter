@@ -12,13 +12,19 @@ public class TweetActivity extends Activity
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.tweet );
+
+        String initialText = getIntent().getStringExtra( TweetLiterConstants.IntentExtraKey_RetweetText );
+    	getEditText().setText( initialText );
+    }
+
+    private EditText getEditText()
+    {
+    	return (EditText)findViewById( R.id.TweetText );
     }
     
     public void sendTweet( View view )
     {
-    	EditText editText = (EditText)findViewById( R.id.TweetText );
-    	String tweetText = editText.getText().toString();
-    	MainActivity.myTwitter.setStatus( tweetText );
+    	MainActivity.myTwitter.setStatus( getEditText().getText().toString() );
     	finish();
     }
 }
