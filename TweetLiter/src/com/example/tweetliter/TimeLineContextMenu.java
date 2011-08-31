@@ -2,8 +2,10 @@ package com.example.tweetliter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import winterwell.jtwitter.Twitter;
 import android.content.Context;
@@ -25,6 +27,7 @@ public class TimeLineContextMenu
 	public Map<Integer, String> profileContextMenuItems = new HashMap<Integer, String>();
 	private Context context = null;
 	private int currentProfileID = profileContextMenuID;
+	private Set<String> uniqueUserProfiles = new HashSet<String>();
 
 	public TimeLineContextMenu()
 	{
@@ -40,6 +43,7 @@ public class TimeLineContextMenu
 	    menu.setHeaderTitle( row.get( TimeLineActivity.tweetTitleKey ) );
 	    menu.add( Menu.NONE, retweetContextMenuID, 0, "Retweet" );
 	    menu.add( Menu.NONE, favouriteContextMenuID, 1, "Favourite" );
+	    uniqueUserProfiles.clear();
 	    addUserProfile( menu, tweet.user.screenName );
 	    addTweetMentions( menu, tweet.text );
 	}
@@ -68,11 +72,15 @@ public class TimeLineContextMenu
 
 	private void addUserProfile( ContextMenu menu, String user )
 	{
-		profileContextMenuItems.put( currentProfileID, user );
-		menu.add( Menu.NONE, currentProfileID, profileContextMenuOrder, "Profile @" + user );
-		currentProfileID++;
+		if( uniqueUserProfiles.contains( user.toLowerCase() ) == false )
+		{
+			uniqueUserProfiles.add( user.toLowerCase() );
+			profileContextMenuItems.put( currentProfileID, user );
+			menu.add( Menu.NONE, currentProfileID, profileContextMenuOrder, "Profile @" + user );
+			currentProfileID++;
+		}
 	}
-
+	
 	private void addTweetMentions( ContextMenu menu, String tweet )
 	{
 		for( String user : extractUsers( tweet ) )
