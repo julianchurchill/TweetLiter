@@ -17,6 +17,11 @@
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:padding="5dp" />
+            android:padding="5dp">
+			<android.support.v4.view.ViewPager
+	            android:id="@+id/tabpager"
+    	        android:layout_width="fill_parent"
+        	    android:layout_height="fill_parent" />
+        </FrameLayout>
     </LinearLayout>
 </TabHost>
